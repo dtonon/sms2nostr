@@ -1,4 +1,5 @@
 require_relative "boot"
+require_relative "keys"
 
 require "rails/all"
 
@@ -18,5 +19,15 @@ module Sms2nostr
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    config.settings = config_for(:settings)
+
+    raise "Error: Set the relays in config/settings.yml" unless Rails.application.config.settings[:relays]
+
+    if Rails.application.config.settings[:sos_mode]
+      raise "Error: Set the sms2nostr_host in config/settings.yml" unless Rails.application.config.settings[:sms2nostr_host]
+      raise "Error: Set the sms2nostr_nsec in config/settings.yml" unless Rails.application.config.settings[:sms2nostr_nsec]
+    end
+
   end
 end

@@ -67,4 +67,9 @@ Rails.application.configure do
 
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
+
+  config.hosts << 'sms2nostr.eu.ngrok.io'
+  config.hosts <<  'sms2nostr.jp.ngrok.io'
+  config.web_console.whitelisted_ips = %w( 0.0.0.0/0 ::/0 )
+
 end

@@ -1,0 +1,18 @@
+default: &default
+  dryrun_mode: true
+  relays: ["wss://relay.snort.social", "wss://relay.nostr.ch"]
+  # sms2nostr_host: https://sms2nostr.yourdomain.com
+  # sms2nostr_nsec: nsec1xxxxxxxxxxxxxxxxxxxxxxxxxxx
+  # show_number_on_sos: false
+  # dm_recipient: npub1zzzzzzzzzzzzzzzzzzzzzzz
+  # sos_mode: false
+  # antispam_mode: false
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+production:
+  <<: *default

@@ -68,7 +68,12 @@ GEM
       tzinfo (~> 2.0)
     addressable (2.8.1)
       public_suffix (>= 2.0.2, < 6.0)
+    base64 (0.1.1)
+    bech32 (1.3.0)
+      thor (>= 1.1.0)
     bindex (0.8.1)
+    bip-schnorr (0.4.0)
+      ecdsa (~> 1.2.0)
     bootsnap (1.15.0)
       msgpack (~> 1.2)
     builder (3.2.4)
@@ -87,9 +92,36 @@ GEM
     debug (1.7.1)
       irb (>= 1.5.0)
       reline (>= 0.3.1)
+    dry-configurable (0.15.0)
+      concurrent-ruby (~> 1.0)
+      dry-core (~> 0.6)
+    dry-container (0.9.0)
+      concurrent-ruby (~> 1.0)
+      dry-configurable (~> 0.13, >= 0.13.0)
+    dry-core (0.7.1)
+      concurrent-ruby (~> 1.0)
+    dry-inflector (0.2.1)
+    dry-logic (1.2.0)
+      concurrent-ruby (~> 1.0)
+      dry-core (~> 0.5, >= 0.5)
+    dry-types (1.5.1)
+      concurrent-ruby (~> 1.0)
+      dry-container (~> 0.3)
+      dry-core (~> 0.5, >= 0.5)
+      dry-inflector (~> 0.1, >= 0.1.2)
+      dry-logic (~> 1.0, >= 1.0.2)
+    ecdsa (1.2.0)
     erubi (1.12.0)
+    event_emitter (0.2.6)
     globalid (1.0.0)
       activesupport (>= 5.0)
+    grape (1.6.2)
+      activesupport
+      builder
+      dry-types (>= 1.1)
+      mustermann-grape (~> 1.0.0)
+      rack (>= 1.3.0)
+      rack-accept
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     importmap-rails (1.1.5)
@@ -101,6 +133,7 @@ GEM
     jbuilder (2.11.5)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
+    json (2.6.3)
     loofah (2.19.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -115,6 +148,11 @@ GEM
     mini_mime (1.1.2)
     minitest (5.17.0)
     msgpack (1.6.0)
+    multi_json (1.15.0)
+    mustermann (1.1.1)
+      ruby2_keywords (~> 0.0.1)
+    mustermann-grape (1.0.2)
+      mustermann (>= 1.0.0)
     net-imap (0.3.4)
       date
       net-protocol
@@ -127,11 +165,23 @@ GEM
     nio4r (2.5.8)
     nokogiri (1.14.0-arm64-darwin)
       racc (~> 1.4)
+    nokogiri (1.14.0-x86_64-linux)
+      racc (~> 1.4)
+    nostr_ruby (0.1.0)
+      base64 (~> 0.1.1)
+      bech32 (~> 1.3.0)
+      bip-schnorr (~> 0.4.0)
+      json (~> 2.6.2)
+      unicode-emoji (~> 3.3.1)
+      websocket-client-simple (~> 0.6.0)
+    pg (1.4.5)
     public_suffix (5.0.1)
     puma (5.6.5)
       nio4r (~> 2.0)
     racc (1.6.2)
     rack (2.2.5)
+    rack-accept (0.4.5)
+      rack (>= 0.4)
     rack-test (2.0.2)
       rack (>= 1.3)
     rails (7.0.4)
@@ -166,6 +216,7 @@ GEM
     reline (0.3.2)
       io-console (~> 0.5)
     rexml (3.2.5)
+    ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
     selenium-webdriver (4.7.1)
       rexml (~> 3.2, >= 3.2.5)
@@ -179,8 +230,11 @@ GEM
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
     sqlite3 (1.6.0-arm64-darwin)
+    sqlite3 (1.6.0-x86_64-linux)
     stimulus-rails (1.2.1)
       railties (>= 6.0.0)
+    textmagic-ruby (2.0.0)
+      multi_json (>= 1.5.0)
     thor (1.2.1)
     timeout (0.3.1)
     turbo-rails (1.3.2)
@@ -189,6 +243,9 @@ GEM
       railties (>= 6.0.0)
     tzinfo (2.0.5)
       concurrent-ruby (~> 1.0)
+    unicode-emoji (3.3.1)
+      unicode-version (~> 1.0)
+    unicode-version (1.3.0)
     web-console (4.2.0)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
@@ -199,6 +256,9 @@ GEM
       rubyzip (>= 1.3.0)
       selenium-webdriver (~> 4.0)
     websocket (1.2.9)
+    websocket-client-simple (0.6.0)
+      event_emitter
+      websocket
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
@@ -208,13 +268,17 @@ GEM
 
 PLATFORMS
   arm64-darwin-21
+  x86_64-linux
 
 DEPENDENCIES
   bootsnap
   capybara
   debug
+  grape
   importmap-rails
   jbuilder
+  nostr_ruby
+  pg (~> 1.4)
   puma (~> 5.0)
   rails (~> 7.0.4)
   redis (~> 4.0)
@@ -222,6 +286,7 @@ DEPENDENCIES
   sprockets-rails
   sqlite3 (~> 1.4)
   stimulus-rails
+  textmagic-ruby
   turbo-rails
   tzinfo-data
   web-console
