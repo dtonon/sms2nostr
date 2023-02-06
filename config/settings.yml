@@ -1,6 +1,6 @@
 default: &default
   dryrun_mode: true
-  relays: ["wss://relay.snort.social", "wss://relay.nostr.ch"]
+  relays: ["wss://nostr.bitcoiner.social", "wss://nostr-pub.wellorder.net", "wss://relay.nostr.ro", "wss://relay.snort.social", "wss://relay.damus.io", "wss://nostr.rocks"]
   # sms2nostr_host: https://sms2nostr.yourdomain.com
   # sms2nostr_nsec: nsec1xxxxxxxxxxxxxxxxxxxxxxxxxxx
   # show_number_on_sos: false
