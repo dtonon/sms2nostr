@@ -4,6 +4,18 @@ sms2nostr is a proof of concept of a sms-to-nostr gateway that permits a user to
 
 Post only. Receiving is technically possible but that would require a curated inbound filter to be manageable via SMS and could be quite expensive when operator debit the SMSs.
 
+## Live beta sms2nostr instance 🔥
+
+You can try sms2nostr live using the official beta instance! First of all [read the usage manual carefully](#usage), then interact with the number [+12066470704](tel:+12066470704) (United States).
+
+**Please note**:
+
+1) Rember that every instance operator can see the nsec, so don't login with your main keypair on a public instance like this one, use a test account (or setup your own server!);
+2) Check with you network operator if it applies charges to send SMS to this specific destination;
+3) The SOS mode is disabled to avoid misuses;
+
+For any question or bug report feel free to ping me on Nostr (npub in the [profile](https://github.com/dtonon)) with a private message.
+
 ## Privacy & Security
 
 The system tries to be more privacy oriented and secure as possibile: the sender's phone number, nsec and pin are never saved to DB or logged (with the exception of debug mode that save the LOGIN operations and output some logs).
@@ -72,7 +84,7 @@ New providers can easily be added, see `provider_template.rb`.
 
 ## Usage
 
-sms2nostr offers 4 modality:
+sms2nostr offers 4 modalities:
 
 * POST mode: create a new account (random key) posting the first message and use it for subsequent messages;
 * BURN mode: create a new key for every new messages;
