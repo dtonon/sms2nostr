@@ -29,9 +29,10 @@ module API
             end
 
             return { status: 'Ok' }
-          # rescue StandardError => e
-          #   # TODO: log and notify
-          #   error!(e.message, 422)
+          rescue StandardError => e
+            # TODO: log and notify
+            puts e.message
+            error!(e.message, 422)
           end
         end
       end

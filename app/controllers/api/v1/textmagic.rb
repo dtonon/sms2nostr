@@ -26,6 +26,7 @@ module API
             return { status: 'Ok' }
           rescue StandardError => e
             # TODO: log and notify
+            puts e.message
             error!(e.message, 422)
           end
         end
