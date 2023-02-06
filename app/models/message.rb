@@ -111,26 +111,41 @@ class Message < ApplicationRecord
     end
     update_column(:event, event.to_s)
 
-    Rails.application.config.settings[:relays].each do |relay|
-      puts "------------------------------\n#{content}\n------------------------------"
-      puts "Posting #{event}\nto #{relay}\n\n"
-      if Rails.application.config.settings[:dryrun_mode]
-        puts "Sender => #{sender}"
-        puts "Sender => #{@nostr_private_key}"
-      else
+    if Rails.application.config.settings[:dryrun_mode]
+      puts "------------------------------\nSender:\n#{sender}"
+      puts "------------------------------\nNpub:\n#{@nostr_private_key}"
+    end
 
+    puts "------------------------------\nMessage:\n#{content}"
+    puts "------------------------------\n#{event}\n------------------------------"
+
+    Rails.application.config.settings[:relays].each do |relay|
+      puts "Posting to #{relay}"
+
+      if !Rails.application.config.settings[:dryrun_mode]
+        timer = 0
         response = nil
-        ws = WebSocket::Client::Simple.connect relay
-        ws.on :message do |msg|
-          puts msg
-          response = JSON.parse(msg.data)
-          ws.close if response[0] == 'OK'
-        end
-        ws.on :open do
-          ws.send event.to_json
-        end
-        while response.nil? do
-          sleep 0.1
+        timer_step = 0.1
+        timeout = 5 # Seconds
+
+        begin
+          ws = WebSocket::Client::Simple.connect relay
+          ws.on :message do |msg|
+            puts msg
+            response = JSON.parse(msg.data)
+            ws.close if response[0] == 'OK'
+          end
+          ws.on :open do
+            ws.send event.to_json
+          end
+          while timer < timeout && response.nil? do
+            sleep timer_step
+            timer += timer_step
+          end
+          ws.close
+        rescue => e
+          puts e.inspect
+          ws.close
         end
 
         update_column(:submited_at, DateTime.now)
