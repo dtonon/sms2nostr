@@ -104,56 +104,59 @@ class Message < ApplicationRecord
     return unless @nostr_private_key
     return if submited_at
 
-    n = Nostr.new(private_key: @nostr_private_key)
+    Thread.new do
+      n = Nostr.new(private_key: @nostr_private_key)
 
-    dm_recipient = Rails.application.config.settings[:dm_recipient]
-    event = if dm_recipient && !sos
-      n.build_dm_event(content, Nostr.to_hex(dm_recipient))
-    else
-      n.build_note_event(content)
-    end
-    update_column(:event, event.to_s)
+      dm_recipient = Rails.application.config.settings[:dm_recipient]
+      event = if dm_recipient && !sos
+        n.build_dm_event(content, Nostr.to_hex(dm_recipient))
+      else
+        n.build_note_event(content)
+      end
+      update_column(:event, event.to_s)
 
-    if Rails.application.config.settings[:dryrun_mode]
-      puts "------------------------------\nSender:\n#{sender}"
-      puts "------------------------------\nNpub:\n#{@nostr_private_key}"
-    end
+      if Rails.application.config.settings[:dryrun_mode]
+        puts "------------------------------\nSender:\n#{sender}"
+        puts "------------------------------\nNpub:\n#{@nostr_private_key}"
+      end
 
-    puts "------------------------------\nMessage:\n#{content}"
-    puts "------------------------------\n#{event}\n------------------------------"
+      puts "------------------------------\nMessage:\n#{content}"
+      puts "------------------------------\n#{event}\n------------------------------"
 
-    Rails.application.config.settings[:relays].each do |relay|
-      puts "Posting to #{relay}"
+      Rails.application.config.settings[:relays].each do |relay|
+        puts "Posting to #{relay}"
 
-      if !Rails.application.config.settings[:dryrun_mode]
-        timer = 0
-        response = nil
-        timer_step = 0.1
-        timeout = 5 # Seconds
+        if !Rails.application.config.settings[:dryrun_mode]
+          timer = 0
+          response = nil
+          timer_step = 0.1
+          timeout = 5 # Seconds
 
-        begin
-          ws = WebSocket::Client::Simple.connect relay
-          ws.on :message do |msg|
-            puts msg
-            response = JSON.parse(msg.data)
-            ws.close if response[0] == 'OK'
+          begin
+            ws = WebSocket::Client::Simple.connect relay
+            ws.on :message do |msg|
+              puts msg
+              response = JSON.parse(msg.data)
+              ws.close if response[0] == 'OK'
+            end
+            ws.on :open do
+              ws.send event.to_json
+            end
+            while timer < timeout && response.nil? do
+              sleep timer_step
+              timer += timer_step
+            end
+            ws.close
+          rescue => e
+            puts e.inspect
+            ws.close
           end
-          ws.on :open do
-            ws.send event.to_json
-          end
-          while timer < timeout && response.nil? do
-            sleep timer_step
-            timer += timer_step
-          end
-          ws.close
-        rescue => e
-          puts e.inspect
-          ws.close
+
+          update_column(:submited_at, DateTime.now)
         end
-
-        update_column(:submited_at, DateTime.now)
       end
     end
+    
   end
 
   # TODO: Move to nostr-ruby
