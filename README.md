@@ -135,3 +135,5 @@ Even if the `dm_recipient` option is enabled the SOS is public fired, to be seen
 ## Future - Todo
 
 - [ ] Allow login and posting without the security pin prefix; on a self-managed instance the service number acts as a password because it is known only to the sender.
+- [ ] Implement delegation via NIP-26
+- [ ] Optional SMS auto reply with the new generated keypair
