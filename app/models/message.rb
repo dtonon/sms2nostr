@@ -6,6 +6,8 @@ class Message < ApplicationRecord
   # Sender is never saved to DB to increase the system's privacy
   attr_accessor :sender, :sos
 
+  validates :provider_message_code, presence: true, uniqueness: true
+
   belongs_to :account, optional: true
 
   before_save :setup

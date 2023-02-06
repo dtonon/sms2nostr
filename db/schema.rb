@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_13_170103) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_06_171713) do
   create_table "accounts", force: :cascade do |t|
     t.string "signature"
     t.string "private_key"
@@ -31,6 +31,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_13_170103) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_messages_on_account_id"
+    t.index ["provider_message_code"], name: "index_messages_on_provider_message_code", unique: true
   end
 
   add_foreign_key "messages", "accounts"
