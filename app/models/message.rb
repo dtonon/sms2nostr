@@ -102,6 +102,7 @@ class Message < ApplicationRecord
   def post_to_nostr
 
     return unless @nostr_private_key
+    return if submited_at
 
     n = Nostr.new(private_key: @nostr_private_key)
 
