@@ -73,6 +73,6 @@ end
 
 gem 'textmagic-ruby'
 gem 'grape'
-gem 'nostr_ruby'
+gem 'nostr_ruby', "~> 0.1"
 
 gem "pg", "~> 1.4"
